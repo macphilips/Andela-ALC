@@ -26,6 +26,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.rmhub.andela_alc.BuildConfig;
+import com.rmhub.andela_alc.OnDownloadCompleteListener;
 import com.rmhub.andela_alc.R;
 
 import java.io.BufferedInputStream;

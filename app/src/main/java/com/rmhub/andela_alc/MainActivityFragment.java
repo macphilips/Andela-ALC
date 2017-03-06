@@ -1,7 +1,8 @@
 package com.rmhub.andela_alc;
 
-import android.support.v4.app.Fragment;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,16 @@ import android.view.ViewGroup;
  */
 public class MainActivityFragment extends Fragment {
 
-    public MainActivityFragment() {
+    @SuppressLint("ValidFragment")
+    private MainActivityFragment() {
+    }
+
+    public static MainActivityFragment newInstance() {
+
+        Bundle args = new Bundle();
+        MainActivityFragment fragment = new MainActivityFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
