@@ -45,7 +45,7 @@ public class ConnectionUtil {
         return null;
     }
 
-    private String search(SearchQuery query, SearchResultCallback callback) {
+    public static String search(SearchQuery query, SearchResultCallback callback) {
         java.net.URL url;
         String result = "";
         PrintWriter out;
@@ -70,7 +70,9 @@ public class ConnectionUtil {
             while ((inputLine = in.readLine()) != null) {
                 result = result.concat(inputLine);
             }
-
+            callback.searchResult(result);
+            Log.d("sendPostHttpRequest", "link = " + String.valueOf(link) + " limit = " + String.valueOf(limit)
+                    + " remain = " + String.valueOf(remain));
             in.close();
         } catch (IOException e) {
             e.printStackTrace();

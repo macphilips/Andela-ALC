@@ -1,5 +1,7 @@
 package com.rmhub.andela_alc;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,14 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.rmhub.andela_alc.util.ImageCache;
-import com.rmhub.andela_alc.util.ImageFetcher;
-
 public class MainActivity extends AppCompatActivity {
 
-    private ImageCache.ImageCacheParams cacheParams = null;
-    private int mImageThumbSize;
-    private ImageFetcher mPostFetcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +23,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupFeed() {
-        mPostFetcher = new ImageFetcher(this, mImageThumbSize);
-        mPostFetcher.setLoadingImage(R.drawable.post_background);
-        mPostFetcher.addImageCache(this.getSupportFragmentManager(), cacheParams);
+
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment mFragment = MainActivityFragment.newInstance();
+        Fragment mFragment = UserResultFragment.newInstance();
         ft.add(R.id.container, mFragment);
         ft.commit();
 
@@ -56,5 +50,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @SuppressWarnings("deprecation")
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage("Searching for Users in Lagos");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        return dialog;
     }
 }
