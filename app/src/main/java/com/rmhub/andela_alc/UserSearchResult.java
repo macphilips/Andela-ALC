@@ -9,14 +9,14 @@ import java.util.ArrayList;
  * .
  */
 
-public class UserSearchResult {
+public class UserSearchResult implements SearchResult {
 
     private int totalCount;
     private boolean resultIncomplete;
     private ArrayList<User> users = new ArrayList<>();
-    private Header header = new Header();
+    private UserSearchResultHeader header = new UserSearchResultHeader();
 
-    public void parseResult(String result) {
+    public void searchResult(String result) {
         ParseResult.searchResult(result, this);
     }
 
@@ -44,15 +44,15 @@ public class UserSearchResult {
         this.users = users;
     }
 
-    public Header getHeader() {
+    public UserSearchResultHeader getHeader() {
         return header;
     }
 
-    public void setHeader(Header header) {
+    public void setHeader(UserSearchResultHeader header) {
         this.header = header;
     }
 
-    public static class Header {
+    public static class UserSearchResultHeader implements HeaderInfo {
         private int status;
         private String link;
         private int limit, remaining;
@@ -71,12 +71,11 @@ public class UserSearchResult {
             return status;
         }
 
-        public void setStatus(int status) {
+        public void status(int status) {
             this.status = status;
         }
 
-
-        public void setLink(String link) {
+        public void link(String link) {
             this.link = link;
             parseLink();
         }
@@ -89,7 +88,7 @@ public class UserSearchResult {
             return limit;
         }
 
-        public void setLimit(int limit) {
+        public void limit(int limit) {
             this.limit = limit;
         }
 
@@ -97,7 +96,7 @@ public class UserSearchResult {
             return remaining;
         }
 
-        public void setRemaining(int remaining) {
+        public void remaining(int remaining) {
             this.remaining = remaining;
         }
     }

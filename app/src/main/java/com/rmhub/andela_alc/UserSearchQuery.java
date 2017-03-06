@@ -7,7 +7,8 @@ package com.rmhub.andela_alc;
  * .
  */
 
-public class UserSearchQuery {
+public class UserSearchQuery implements SearchQuery {
+
 
     private String query, type, in, repos, location, language, created, followers;
 
@@ -20,6 +21,10 @@ public class UserSearchQuery {
         this.language = language;
         this.created = created;
         this.followers = followers;
+    }
+
+    public String getURL() {
+        return "";
     }
 
     public String getSearchQuery() {
@@ -50,7 +55,6 @@ public class UserSearchQuery {
         }
         return builder.toString();
     }
-
 
     public static class QueryBuilder {
         private String query, type, in, repos, location, language, created, followers;
