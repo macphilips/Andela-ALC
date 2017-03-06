@@ -17,17 +17,17 @@ import java.util.ArrayList;
 
 class ParseResult {
 
-    public static void searchResult(String result, SearchResult searchResult) {
+    public static void searchResult(String result, UserSearchResult userSearchResult) {
         try {
             JSONObject resultObj = new JSONObject(result);
             if (resultObj.has("total_count")) {
-                searchResult.setTotalCount(resultObj.getInt("total_count"));
+                userSearchResult.setTotalCount(resultObj.getInt("total_count"));
             }
             if (resultObj.has("incomplete_results")) {
-                searchResult.setResultIncomplete(resultObj.getBoolean("incomplete_results"));
+                userSearchResult.setResultIncomplete(resultObj.getBoolean("incomplete_results"));
             }
             if (resultObj.has("items")) {
-                searchResult.setUsers(getUsers(resultObj));
+                userSearchResult.setUsers(getUsers(resultObj));
             }
         } catch (JSONException e) {
             e.printStackTrace();

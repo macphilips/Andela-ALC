@@ -47,7 +47,6 @@ public class ConnectionUtil {
 
     private String sendHttpPostRequest(String URL, String params) {
 
-
         java.net.URL url;
         String result = "";
         PrintWriter out;
