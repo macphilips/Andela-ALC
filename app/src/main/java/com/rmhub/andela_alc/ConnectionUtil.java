@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class ConnectionUtil {
 
-    private static final String API_URL = "https://api.github.com";
+    public static final String API_URL = "https://api.github.com";
 
     public static final String ACCESS_TOKEN = "963aacccc06edcd65d3ba3f4d025cfb84e75adb0";
 
@@ -45,35 +45,33 @@ public class ConnectionUtil {
         return null;
     }
 
-    private String sendHttpPostRequest(String URL, String params) {
-
+    private String search(SearchQuery query, SearchResultCallback callback) {
         java.net.URL url;
         String result = "";
         PrintWriter out;
         BufferedReader in;
         try {
-            Log.d("sending post request", URL + "?" + params);
-            url = new URL(URL);
-            HttpURLConnection connection;
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            out = new PrintWriter(connection.getOutputStream());
-            out.println(params + "&");
-            //out.flush();
-
+            Log.d("sending post request", query.getURL() + "? q=" + query.getSearchQuery());
+            url = new URL(query.getURL());
+            HttpURLConnection conn;
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            out = new PrintWriter(conn.getOutputStream());
+            out.println("q=" + query.getSearchQuery() + "&access_token=" + ACCESS_TOKEN + "&");
             out.close();
 
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
-
+            String link = conn.getRequestProperty("Link");
+            String limit = conn.getRequestProperty("X-RateLimit-Limit");
+            String remain = conn.getRequestProperty("X-RateLimit-Remaining");
             while ((inputLine = in.readLine()) != null) {
                 result = result.concat(inputLine);
             }
+
             in.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            result = null;
         } catch (IOException e) {
             e.printStackTrace();
             result = null;

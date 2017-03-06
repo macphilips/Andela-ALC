@@ -9,6 +9,5 @@ package com.rmhub.andela_alc;
 
 public interface SearchQuery {
     String getSearchQuery();
-
     String getURL();
 }

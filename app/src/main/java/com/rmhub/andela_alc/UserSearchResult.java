@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * .
  */
 
-public class UserSearchResult implements SearchResult {
+public class UserSearchResult implements SearchResultCallback {
 
     private int totalCount;
     private boolean resultIncomplete;

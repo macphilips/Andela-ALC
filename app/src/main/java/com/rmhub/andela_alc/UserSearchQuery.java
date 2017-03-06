@@ -9,7 +9,6 @@ package com.rmhub.andela_alc;
 
 public class UserSearchQuery implements SearchQuery {
 
-
     private String query, type, in, repos, location, language, created, followers;
 
     private UserSearchQuery(String query, String type, String in, String repos, String location, String language, String created, String followers) {
@@ -24,7 +23,7 @@ public class UserSearchQuery implements SearchQuery {
     }
 
     public String getURL() {
-        return "";
+        return ConnectionUtil.API_URL + "/search/users";
     }
 
     public String getSearchQuery() {

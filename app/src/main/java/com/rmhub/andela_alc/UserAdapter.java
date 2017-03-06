@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.rmhub.andela_alc.util.ImageFetcher;
 import com.rmhub.andela_alc.util.ImageWorker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,9 +27,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     private ImageFetcher mImageFetcher;
     private List<User> cardList;
 
-    public UserAdapter(Context mContext, List<User> cardList) {
+    public UserAdapter(Context mContext, List<User> cardList, ImageFetcher mImageFetcher) {
         this.mContext = mContext;
+        this.mImageFetcher = mImageFetcher;
         this.cardList = cardList;
+    }
+
+    public UserAdapter(Context mContext) {
+        this(mContext, new ArrayList<User>(), null);
+    }
+
+    public UserAdapter(Context mContext, ImageFetcher mImageFetcher) {
+        this(mContext, new ArrayList<User>(), mImageFetcher);
+    }
+
+    public UserAdapter(Context mContext, List<User> cardList) {
+        this(mContext, cardList, null);
     }
 
     public void setPostFetcher(ImageFetcher mImageFetcher) {
@@ -50,10 +64,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        User card = cardList.get(position);
-
+        User user = cardList.get(position);
+        holder.username.setText(user.getUsername());
         if (mImageFetcher != null) {
-            mImageFetcher.loadImage(card.getAvatar(), holder.avatar);
+            mImageFetcher.loadImage(user.getAvatar(), holder.avatar);
         }
         //  holder.card_post.setImageResource(R.drawable.post1);
 
@@ -79,11 +93,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         public MyViewHolder(View view) {
             super(view);
             username = (TextView) view.findViewById(R.id.username);
-
             name = (TextView) view.findViewById(R.id.name);
             avatar = (ImageView) view.findViewById(R.id.user_avatar);
-
-
         }
     }
 }

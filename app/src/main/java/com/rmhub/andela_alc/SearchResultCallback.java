@@ -7,9 +7,9 @@ package com.rmhub.andela_alc;
  * .
  */
 
-public interface SearchResult {
+public interface SearchResultCallback {
 
-     void searchResult(String result);
+    void searchResult(String result);
 
     HeaderInfo getHeader();
 }
