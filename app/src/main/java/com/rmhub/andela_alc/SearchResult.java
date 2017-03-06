@@ -14,33 +14,42 @@ public class SearchResult {
     private int totalCount;
     private boolean resultIncomplete;
     private ArrayList<User> users = new ArrayList<>();
+    private Header header = new Header();
 
     public void parseResult(String result) {
         ParseResult.searchResult(result, this);
-    }
-
-    public void setTotalCount(int totalCount) {
-        this.totalCount = totalCount;
-    }
-
-    public void setResultIncomplete(boolean resultIncomplete) {
-        this.resultIncomplete = resultIncomplete;
-    }
-
-    public void setUsers(ArrayList<User> users) {
-        this.users = users;
     }
 
     public int getTotalCount() {
         return totalCount;
     }
 
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
     public boolean isResultIncomplete() {
         return resultIncomplete;
     }
 
+    public void setResultIncomplete(boolean resultIncomplete) {
+        this.resultIncomplete = resultIncomplete;
+    }
+
     public ArrayList<User> getUsers() {
         return users;
+    }
+
+    public void setUsers(ArrayList<User> users) {
+        this.users = users;
+    }
+
+    public Header getHeader() {
+        return header;
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
     }
 
     public static class Header {

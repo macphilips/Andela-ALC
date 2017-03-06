@@ -8,8 +8,8 @@ package com.rmhub.andela_alc;
  */
 
 public class User {
-  private   String username, avatar, gravatarID, url, htmlURL, followers, subscriptions, organizations, repos,
-            receivedEvents, type, score;
+    private String username, avatar, gravatarID, url, htmlURL, followers, subscriptions,
+            organizations, repos, receivedEvents, type, score;
 
     public String getUsername() {
         return username;
