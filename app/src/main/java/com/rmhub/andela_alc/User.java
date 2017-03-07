@@ -42,6 +42,10 @@ public class User implements Parcelable{
         publicGists = in.readInt();
     }
 
+    public User() {
+
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(username);

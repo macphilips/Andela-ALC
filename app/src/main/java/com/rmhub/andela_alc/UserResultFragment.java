@@ -1,5 +1,6 @@
 package com.rmhub.andela_alc;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 public class UserResultFragment extends Fragment {
 
     private static final String IMAGE_CACHE_DIR = "thumbs";
+    private static final String[] PERMISSIONS = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
     ImageCache.ImageCacheParams cacheParams = null;
     int mImageThumbSize;
     private ImageFetcher mPostFetcher;
