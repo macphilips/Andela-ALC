@@ -2,8 +2,13 @@ package com.rmhub.andela_alc;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +31,8 @@ public class UserResultFragment extends Fragment {
     private static final String IMAGE_CACHE_DIR = "thumbs";
     private static final String[] PERMISSIONS = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
+    private static final int REQUEST_VIDEO_PERMISSIONS = 1;
+    private static final String FRAGMENT_DIALOG = "Confirmation Dialog";
     ImageCache.ImageCacheParams cacheParams = null;
     int mImageThumbSize;
     private ImageFetcher mPostFetcher;
@@ -72,9 +79,79 @@ public class UserResultFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+        startSearch();
+    }
 
-        UserSearchQuery query = (new UserSearchQuery.QueryBuilder().setLanguage("Java").setLocation("Lagos")).builder();
-        new SearchInBackground().execute(query);
+    private void startSearch() {
+        if (requestPermission()) {
+            UserSearchQuery query = (new UserSearchQuery.QueryBuilder().setLanguage("Java").setLocation("Lagos")).builder();
+            new SearchInBackground().execute(query);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        boolean success = false;
+        if (grantResults.length == PERMISSIONS.length) {
+            success = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    success = false;
+                    break;
+                }
+            }
+        }
+        if (!success) {
+            ErrorDialog
+                    .show(getContext().getResources().getString(R.string.permission_request), getActivity().getSupportFragmentManager());
+        }
+
+    }
+
+    private boolean hasPermissionsGranted(String[] permissions) {
+        for (String permission : permissions) {
+            if (hasPermissionGranted(permission)) return false;
+        }
+        return true;
+    }
+
+    private boolean hasPermissionGranted(String permission) {
+        if (ActivityCompat.checkSelfPermission(getContext(), permission)
+                != PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        return false;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean shouldShowRequestPermissionRationale(String[] permissions) {
+        for (String permission : permissions) {
+            if (shouldShowRequestPermissionRationale(permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
+    }
+
+    public boolean requestPermission() {
+        if (!hasPermissionsGranted(PERMISSIONS)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (shouldShowRequestPermissionRationale(PERMISSIONS)) {
+                    ConfirmationDialog.newInstance(PERMISSIONS).show(getFragmentManager(), FRAGMENT_DIALOG);
+                } else {
+                    requestPermissions(PERMISSIONS, REQUEST_VIDEO_PERMISSIONS);
+                }
+                return false;
+            }
+        }
+        return true;
     }
 
     private class SearchInBackground extends AsyncTask<SearchQuery, Void, SearchResultCallback> {
