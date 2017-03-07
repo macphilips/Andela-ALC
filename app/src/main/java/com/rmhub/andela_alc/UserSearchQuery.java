@@ -1,5 +1,8 @@
 package com.rmhub.andela_alc;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 /**
  * Created by MOROLANI on 3/6/2017
  * <p>
@@ -27,32 +30,40 @@ public class UserSearchQuery implements SearchQuery {
     }
 
     public String getSearchQuery() {
-        StringBuilder builder = new StringBuilder();
-        if (query != null) {
-            builder.append(query).append(" ");
+        try {
+            StringBuilder builder = new StringBuilder();
+
+            String encodeSpace = URLEncoder.encode(" ", "UTF-8");
+
+            if (query != null) {
+                builder.append(query).append(encodeSpace);
+            }
+            if (type != null) {
+                builder.append("type:").append(query).append(encodeSpace);
+            }
+            if (in != null) {
+                builder.append("in:").append(in).append(encodeSpace);
+            }
+            if (repos != null) {
+                builder.append("repos:").append(repos).append(encodeSpace);
+            }
+            if (location != null) {
+                builder.append("location:").append(location).append(encodeSpace);
+            }
+            if (language != null) {
+                builder.append("language:").append(language).append(encodeSpace);
+            }
+            if (created != null) {
+                builder.append("created:").append(created).append(encodeSpace);
+            }
+            if (followers != null) {
+                builder.append("followers:").append(followers).append(encodeSpace);
+            }
+            return builder.toString();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        if (type != null) {
-            builder.append("type:").append(query).append(" ");
-        }
-        if (in != null) {
-            builder.append("in:").append(in).append(" ");
-        }
-        if (repos != null) {
-            builder.append("repos:").append(repos).append(" ");
-        }
-        if (location != null) {
-            builder.append("location:").append(location).append(" ");
-        }
-        if (language != null) {
-            builder.append("language:").append(language).append(" ");
-        }
-        if (created != null) {
-            builder.append("created:").append(created).append(" ");
-        }
-        if (followers != null) {
-            builder.append("followers:").append(followers).append(" ");
-        }
-        return builder.toString();
+        return "";
     }
 
     public static class QueryBuilder {
