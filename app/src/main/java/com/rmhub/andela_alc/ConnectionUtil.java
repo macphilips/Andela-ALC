@@ -27,7 +27,8 @@ public class ConnectionUtil {
         BufferedReader in;
         try {
             String params = "q=" + query.getSearchQuery()
-                    + "&access_token=" + ACCESS_TOKEN;
+                    //+ "&access_token=" + ACCESS_TOKEN
+                    ;
             String url_string = String.format("%s?%s", query.getURL(), params);
 
             Log.d("sending post request", "url=" + url_string);

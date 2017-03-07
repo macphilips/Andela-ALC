@@ -65,9 +65,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         User user = cardList.get(position);
-        holder.username.setText(user.getUsername());
+        holder.username.setText(String.format("@%s", user.getUsername()));
+        holder.name.setText(user.getName());
         if (mImageFetcher != null) {
-            mImageFetcher.loadImage(user.getAvatar(), holder.avatar);
+            mImageFetcher.loadImage(user.getAvatarURL(), holder.avatar);
         }
         //  holder.card_post.setImageResource(R.drawable.post1);
 

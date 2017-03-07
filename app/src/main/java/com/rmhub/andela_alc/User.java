@@ -10,32 +10,51 @@ import android.os.Parcelable;
  * .
  */
 
-public class User implements Parcelable{
-    private String username, avatar, gravatarID, url, htmlURL, followers, subscriptions,
-            organizations, repos, receivedEvents, type, score;
-    private String name, company, location, email, hireable, bio;
+public class User implements Parcelable {
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+    private String username, avatarURL, gravatarID, url, htmlURL, followersURL, subscriptionsURL,
+            organizationsURL, reposURL, receivedEventsURL, type, score, name, company, location,
+            email, bio, blog, gistsURL, followingURL;
+    private boolean hireable;
     private int numOfFollowers, publicRepos, numOfFollowing, publicGists;
 
 
+    public User() {
+
+    }
+
     protected User(Parcel in) {
         username = in.readString();
-        avatar = in.readString();
+        avatarURL = in.readString();
         gravatarID = in.readString();
         url = in.readString();
         htmlURL = in.readString();
-        followers = in.readString();
-        subscriptions = in.readString();
-        organizations = in.readString();
-        repos = in.readString();
-        receivedEvents = in.readString();
+        followersURL = in.readString();
+        subscriptionsURL = in.readString();
+        organizationsURL = in.readString();
+        reposURL = in.readString();
+        receivedEventsURL = in.readString();
         type = in.readString();
         score = in.readString();
         name = in.readString();
         company = in.readString();
         location = in.readString();
         email = in.readString();
-        hireable = in.readString();
         bio = in.readString();
+        blog = in.readString();
+        gistsURL = in.readString();
+        followingURL = in.readString();
+        hireable = in.readByte() != 0;
         numOfFollowers = in.readInt();
         publicRepos = in.readInt();
         numOfFollowing = in.readInt();
@@ -43,18 +62,52 @@ public class User implements Parcelable{
     }
 
     @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(username);
+        dest.writeString(avatarURL);
+        dest.writeString(gravatarID);
+        dest.writeString(url);
+        dest.writeString(htmlURL);
+        dest.writeString(followersURL);
+        dest.writeString(subscriptionsURL);
+        dest.writeString(organizationsURL);
+        dest.writeString(reposURL);
+        dest.writeString(receivedEventsURL);
+        dest.writeString(type);
+        dest.writeString(score);
+        dest.writeString(name);
+        dest.writeString(company);
+        dest.writeString(location);
+        dest.writeString(email);
+        dest.writeString(bio);
+        dest.writeString(blog);
+        dest.writeString(gistsURL);
+        dest.writeString(followingURL);
+        dest.writeByte((byte) (hireable ? 1 : 0));
+        dest.writeInt(numOfFollowers);
+        dest.writeInt(publicRepos);
+        dest.writeInt(numOfFollowing);
+        dest.writeInt(publicGists);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
+                ", avatarURL='" + avatarURL + '\'' +
                 ", gravatarID='" + gravatarID + '\'' +
                 ", url='" + url + '\'' +
                 ", htmlURL='" + htmlURL + '\'' +
-                ", followers='" + followers + '\'' +
-                ", subscriptions='" + subscriptions + '\'' +
-                ", organizations='" + organizations + '\'' +
-                ", repos='" + repos + '\'' +
-                ", receivedEvents='" + receivedEvents + '\'' +
+                ", followersURL='" + followersURL + '\'' +
+                ", subscriptionsURL='" + subscriptionsURL + '\'' +
+                ", organizationsURL='" + organizationsURL + '\'' +
+                ", reposURL='" + reposURL + '\'' +
+                ", receivedEventsURL='" + receivedEventsURL + '\'' +
                 ", type='" + type + '\'' +
                 ", score='" + score + '\'' +
                 ", name='" + name + '\'' +
@@ -70,52 +123,6 @@ public class User implements Parcelable{
                 '}';
     }
 
-    public User() {
-
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(username);
-        dest.writeString(avatar);
-        dest.writeString(gravatarID);
-        dest.writeString(url);
-        dest.writeString(htmlURL);
-        dest.writeString(followers);
-        dest.writeString(subscriptions);
-        dest.writeString(organizations);
-        dest.writeString(repos);
-        dest.writeString(receivedEvents);
-        dest.writeString(type);
-        dest.writeString(score);
-        dest.writeString(name);
-        dest.writeString(company);
-        dest.writeString(location);
-        dest.writeString(email);
-        dest.writeString(hireable);
-        dest.writeString(bio);
-        dest.writeInt(numOfFollowers);
-        dest.writeInt(publicRepos);
-        dest.writeInt(numOfFollowing);
-        dest.writeInt(publicGists);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     public String getUsername() {
         return username;
@@ -125,12 +132,12 @@ public class User implements Parcelable{
         this.username = username;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getAvatarURL() {
+        return avatarURL;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setAvatarURL(String avatar) {
+        this.avatarURL = avatar;
     }
 
     public void setScore(String score) {
@@ -169,11 +176,11 @@ public class User implements Parcelable{
         this.email = email;
     }
 
-    public String getHireable() {
+    public boolean getHireable() {
         return hireable;
     }
 
-    public void setHireable(String hireable) {
+    public void setHireable(boolean hireable) {
         this.hireable = hireable;
     }
 
@@ -241,44 +248,44 @@ public class User implements Parcelable{
         this.htmlURL = htmlURL;
     }
 
-    public String getFollowers() {
-        return followers;
+    public String getFollowersURL() {
+        return followersURL;
     }
 
-    public void setFollowers(String followers) {
-        this.followers = followers;
+    public void setFollowersURL(String followers) {
+        this.followersURL = followers;
     }
 
-    public String getSubscriptions() {
-        return subscriptions;
+    public String getSubscriptionsURL() {
+        return subscriptionsURL;
     }
 
-    public void setSubscriptions(String subscriptions) {
-        this.subscriptions = subscriptions;
+    public void setSubscriptionsURL(String subscriptions) {
+        this.subscriptionsURL = subscriptions;
     }
 
-    public String getOrganizations() {
-        return organizations;
+    public String getOrganizationsURL() {
+        return organizationsURL;
     }
 
-    public void setOrganizations(String organizations) {
-        this.organizations = organizations;
+    public void setOrganizationsURL(String organizations) {
+        this.organizationsURL = organizations;
     }
 
-    public String getRepos() {
-        return repos;
+    public String getReposURL() {
+        return reposURL;
     }
 
-    public void setRepos(String repos) {
-        this.repos = repos;
+    public void setReposUrl(String repos) {
+        this.reposURL = repos;
     }
 
-    public String getReceivedEvents() {
-        return receivedEvents;
+    public String getReceivedEventsURL() {
+        return receivedEventsURL;
     }
 
-    public void setReceivedEvents(String receivedEvents) {
-        this.receivedEvents = receivedEvents;
+    public void setReceivedEventsURL(String receivedEvents) {
+        this.receivedEventsURL = receivedEvents;
     }
 
     public String getType() {
@@ -295,5 +302,29 @@ public class User implements Parcelable{
 
     public void setScore(Double score) {
         this.score = String.valueOf(score);
+    }
+
+    public String getBlog() {
+        return blog;
+    }
+
+    public void setBlog(String blog) {
+        this.blog = blog;
+    }
+
+    public String getGistsURL() {
+        return gistsURL;
+    }
+
+    public void setGistsURL(String gistsURL) {
+        this.gistsURL = gistsURL;
+    }
+
+    public String getFollowingURL() {
+        return followingURL;
+    }
+
+    public void setFollowingURL(String followingURL) {
+        this.followingURL = followingURL;
     }
 }
