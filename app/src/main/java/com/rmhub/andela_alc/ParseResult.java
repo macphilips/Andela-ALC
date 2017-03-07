@@ -1,6 +1,7 @@
 package com.rmhub.andela_alc;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +30,7 @@ class ParseResult {
             if (resultObj.has("items")) {
                 userSearchResult.setUsers(getUsers(resultObj));
             }
+            Log.d("ParseResult",String.valueOf(userSearchResult));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -87,6 +89,7 @@ class ParseResult {
 
                 user.setScore(item.getDouble("score"));
             }
+            Log.d("ParseResult",String.valueOf(user));
             users.add(user);
         }
         return users;

@@ -1,6 +1,9 @@
 package com.rmhub.andela_alc;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Created by MOROLANI on 3/6/2017
@@ -15,6 +18,16 @@ public class UserSearchResult implements SearchResultCallback {
     private boolean resultIncomplete;
     private ArrayList<User> users = new ArrayList<>();
     private UserSearchResultHeader header = new UserSearchResultHeader();
+
+    @Override
+    public String toString() {
+        return "UserSearchResult{" +
+                "totalCount=" + totalCount +
+                ", resultIncomplete=" + resultIncomplete +
+                ", users=" + users +
+                ", header=" + header +
+                '}';
+    }
 
     public void searchResult(String result) {
         ParseResult.searchResult(result, this);
@@ -78,10 +91,21 @@ public class UserSearchResult implements SearchResultCallback {
         public void link(String link) {
             this.link = link;
             parseLink();
+            Log.d("UserSearchResult", "next=" + next);
+            Log.d("UserSearchResult", " last=" + last);
         }
 
         private void parseLink() {
-
+            StringTokenizer token = new StringTokenizer(link, ",");
+            while (token.hasMoreElements()) {
+                String nextToken = token.nextToken();
+                String[] split = nextToken.split(";");
+                if (split[1].contains("next")) {
+                    next = split[0].replace('<', ' ').replace('>', ' ').trim();
+                } else if (split[1].contains("last")) {
+                    last = split[0].replace('<', ' ').replace('>', ' ').trim();
+                }
+            }
         }
 
         public int getLimit() {
@@ -98,6 +122,18 @@ public class UserSearchResult implements SearchResultCallback {
 
         public void remaining(int remaining) {
             this.remaining = remaining;
+        }
+
+        @Override
+        public String toString() {
+            return "UserSearchResultHeader{" +
+                    "status=" + status +
+                    ", link='" + link + '\'' +
+                    ", limit=" + limit +
+                    ", remaining=" + remaining +
+                    ", next='" + next + '\'' +
+                    ", last='" + last + '\'' +
+                    '}';
         }
     }
 }

@@ -42,6 +42,34 @@ public class User implements Parcelable{
         publicGists = in.readInt();
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", gravatarID='" + gravatarID + '\'' +
+                ", url='" + url + '\'' +
+                ", htmlURL='" + htmlURL + '\'' +
+                ", followers='" + followers + '\'' +
+                ", subscriptions='" + subscriptions + '\'' +
+                ", organizations='" + organizations + '\'' +
+                ", repos='" + repos + '\'' +
+                ", receivedEvents='" + receivedEvents + '\'' +
+                ", type='" + type + '\'' +
+                ", score='" + score + '\'' +
+                ", name='" + name + '\'' +
+                ", company='" + company + '\'' +
+                ", location='" + location + '\'' +
+                ", email='" + email + '\'' +
+                ", hireable='" + hireable + '\'' +
+                ", bio='" + bio + '\'' +
+                ", numOfFollowers=" + numOfFollowers +
+                ", publicRepos=" + publicRepos +
+                ", numOfFollowing=" + numOfFollowing +
+                ", publicGists=" + publicGists +
+                '}';
+    }
+
     public User() {
 
     }
