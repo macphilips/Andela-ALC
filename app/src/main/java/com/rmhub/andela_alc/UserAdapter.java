@@ -23,14 +23,16 @@ import java.util.List;
  */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> implements ImageWorker.OnImageLoadedListener {
 
+    private static final int VIEW_TYPE_LOADING = 1;
     private final Context mContext;
     private ImageFetcher mImageFetcher;
-    private List<User> cardList;
+    private List<User> userList;
+    private int VIEW_TYPE_ITEM = 2;
 
-    public UserAdapter(Context mContext, List<User> cardList, ImageFetcher mImageFetcher) {
+    public UserAdapter(Context mContext, List<User> userList, ImageFetcher mImageFetcher) {
         this.mContext = mContext;
         this.mImageFetcher = mImageFetcher;
-        this.cardList = cardList;
+        this.userList = userList;
     }
 
     public UserAdapter(Context mContext) {
@@ -41,44 +43,56 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         this(mContext, new ArrayList<User>(), mImageFetcher);
     }
 
-    public UserAdapter(Context mContext, List<User> cardList) {
-        this(mContext, cardList, null);
+    public UserAdapter(Context mContext, List<User> userList) {
+        this(mContext, userList, null);
     }
 
     public void setPostFetcher(ImageFetcher mImageFetcher) {
         this.mImageFetcher = mImageFetcher;
     }
 
-    public void setCardList(List<User> cardList) {
-        this.cardList = cardList;
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
         notifyDataSetChanged();
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.user_item, parent, false);
-
-        return new MyViewHolder(itemView);
+        if (viewType == VIEW_TYPE_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
+            return new MyItemHolder(itemView);
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
+            return new MyProgressHolder(itemView);
+        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        User user = cardList.get(position);
-        holder.username.setText(String.format("@%s", user.getUsername()));
-        holder.name.setText(user.getName());
-        if (mImageFetcher != null) {
-            mImageFetcher.loadImage(user.getAvatarURL(), holder.avatar);
-        }
-        //  holder.card_post.setImageResource(R.drawable.post1);
+        if (holder instanceof MyItemHolder) {
+            MyItemHolder itemHolder = (MyItemHolder) holder;
+            User user = userList.get(position);
+            itemHolder.username.setText(String.format("@%s", user.getUsername()));
+            itemHolder.name.setText((user.getName() != null) ? user.getName() : "");
+            if (mImageFetcher != null) {
+                mImageFetcher.loadImage(user.getAvatarURL(), itemHolder.avatar);
+            }
+        } else if (holder instanceof MyProgressHolder) {
+            MyProgressHolder itemHolder = (MyProgressHolder) holder;
 
+        }
     }
 
     @Override
     public int getItemCount() {
-        return cardList.size();
+        return userList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return userList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
 
     @Override
     public void onImageLoaded(boolean success, int pos) {
@@ -88,10 +102,28 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        public MyViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public class MyItemHolder extends MyViewHolder {
         public TextView username, name;
         public ImageView avatar;
 
-        public MyViewHolder(View view) {
+        public MyItemHolder(View view) {
+            super(view);
+            username = (TextView) view.findViewById(R.id.username);
+            name = (TextView) view.findViewById(R.id.name);
+            avatar = (ImageView) view.findViewById(R.id.user_avatar);
+        }
+    }
+
+    public class MyProgressHolder extends MyViewHolder {
+        public TextView username, name;
+        public ImageView avatar;
+
+        public MyProgressHolder(View view) {
             super(view);
             username = (TextView) view.findViewById(R.id.username);
             name = (TextView) view.findViewById(R.id.name);

@@ -28,7 +28,7 @@ public class ConnectionUtil {
         try {
             String params = "q=" + query.getSearchQuery()
                     //+ "&access_token=" + ACCESS_TOKEN
-                    ;
+                    + "per_page=20";
             String url_string = String.format("%s?%s", query.getURL(), params);
 
             Log.d("sending post request", "url=" + url_string);

@@ -26,19 +26,19 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class UserResultFragment extends Fragment {
+public class UserResultFragment extends Fragment implements LoadMoreCallback {
 
     private static final String IMAGE_CACHE_DIR = "thumbs";
     private static final String[] PERMISSIONS = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_NETWORK_STATE,Manifest.permission.ACCESS_WIFI_STATE,
+            Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
     private static final int REQUEST_VIDEO_PERMISSIONS = 1;
     private static final String FRAGMENT_DIALOG = "Confirmation Dialog";
     ImageCache.ImageCacheParams cacheParams = null;
     int mImageThumbSize;
-    private ImageFetcher mPostFetcher;
     private ArrayList<User> cardList;
     private UserAdapter mAdapter;
+    private ScrollChange scrollChange;
 
     @SuppressLint("ValidFragment")
     private UserResultFragment() {
@@ -70,16 +70,18 @@ public class UserResultFragment extends Fragment {
 
     private void init(View v) {
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.users_list);
-        mPostFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
+        ImageFetcher mPostFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
         mPostFetcher.setLoadingImage(R.drawable.post_background);
         mPostFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
         mAdapter = new UserAdapter(getActivity(), mPostFetcher);
 
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
+        scrollChange = new ScrollChange(mLayoutManager, this);
+        recyclerView.addOnScrollListener(scrollChange);
         startSearch();
     }
 
@@ -155,6 +157,11 @@ public class UserResultFragment extends Fragment {
         return true;
     }
 
+    @Override
+    public void loadMore() {
+
+    }
+
     private class SearchInBackground extends AsyncTask<SearchQuery, Void, SearchResultCallback> {
         @Override
         protected void onPreExecute() {
@@ -167,7 +174,7 @@ public class UserResultFragment extends Fragment {
             super.onPostExecute(callback);
             getActivity().dismissDialog(0);
             if (callback instanceof UserSearchResult) {
-                mAdapter.setCardList(((UserSearchResult) callback).getUsers());
+                mAdapter.setUserList(((UserSearchResult) callback).getUsers());
 
             }
         }
