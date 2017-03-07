@@ -26,7 +26,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rmhub.andela_alc.MainActivity;
+import com.rmhub.andela_alc.Home;
 import com.rmhub.andela_alc.R;
 
 
@@ -65,8 +65,8 @@ public class Utils {
             if (Utils.hasHoneycomb()) {
                 threadPolicyBuilder.penaltyFlashScreen();
                 vmPolicyBuilder
-                        .setClassInstanceLimit(MainActivity.class, 1)
-                        .setClassInstanceLimit(MainActivity.class, 1);
+                        .setClassInstanceLimit(Home.class, 1)
+                        .setClassInstanceLimit(Home.class, 1);
             }
             StrictMode.setThreadPolicy(threadPolicyBuilder.build());
             StrictMode.setVmPolicy(vmPolicyBuilder.build());
