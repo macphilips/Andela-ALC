@@ -229,12 +229,12 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         @Override
         protected SearchResultCallback doInBackground(String... params) {
             UserSearchResult result = new UserSearchResult();
-            ConnectionUtil.search(params[0], result);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            ConnectionUtil.search(params[0], result);
             return result;
         }
     }

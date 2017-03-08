@@ -58,7 +58,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     }
 
     public void addUserList(List<User> userList) {
-        int end = this.userList.size();
+        if (userList.size() == 0){
+
+        }
+            int end = this.userList.size();
         for (int i = 0, n = userList.size(); i < n; i++) {
             userList.get(i).setId(i + end);
         }
@@ -117,7 +120,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
             MyItemHolder itemHolder = (MyItemHolder) holder;
             User user = userList.get(position);
             itemHolder.username.setText(String.format("@%s", user.getUsername()));
-            itemHolder.name.setText(String.format("id %d",user.getId()));
+            itemHolder.name.setText(String.format("id %d", user.getId()));
             // itemHolder.name.setText((user.getName() != null) ? user.getName() : "");
             if (mImageFetcher != null) {
                 mImageFetcher.loadImage(user.getAvatarURL(), itemHolder.avatar);
@@ -159,6 +162,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     private class MyItemHolder extends MyViewHolder {
         TextView username, name;
         ImageView avatar;
+
         MyItemHolder(View view) {
             super(view);
             username = (TextView) view.findViewById(R.id.username);

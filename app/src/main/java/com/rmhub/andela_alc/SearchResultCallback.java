@@ -10,6 +10,5 @@ package com.rmhub.andela_alc;
 public interface SearchResultCallback {
 
     void searchResult(String result);
-
     HeaderInfo getHeader();
 }
