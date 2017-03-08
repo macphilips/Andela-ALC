@@ -23,7 +23,7 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> implements ImageWorker.OnImageLoadedListener {
 
     private static final int VIEW_TYPE_LOADING = 1;
-    View.OnClickListener itemClickListener, loadClickListener;
+    View.OnClickListener itemClickListener;
     private ImageFetcher mImageFetcher;
     private List<User> userList;
     private int VIEW_TYPE_ITEM = 2;
@@ -50,10 +50,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
 
     public void setItemClickListener(View.OnClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
-    }
-
-    public void setLoadClickListener(View.OnClickListener loadClickListener) {
-        this.loadClickListener = loadClickListener;
     }
 
     private String getLastURL() {
@@ -143,7 +139,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                 itemHolder.container.setOnClickListener(itemClickListener);
         } else if (holder instanceof MyProgressHolder) {
             MyProgressHolder itemHolder = (MyProgressHolder) holder;
-
         }
     }
 

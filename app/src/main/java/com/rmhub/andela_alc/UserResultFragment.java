@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class UserResultFragment extends Fragment implements LoadMoreCallback {
+public class UserResultFragment extends Fragment implements LoadMoreCallback, View.OnClickListener {
 
     private static final String IMAGE_CACHE_DIR = "thumbs";
     private static final String[] PERMISSIONS = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -81,6 +81,7 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mAdapter = new UserAdapter(mPostFetcher);
+        mAdapter.setItemClickListener(this);
         scrollChange = new ScrollChange(mLayoutManager, this);
 
         recyclerView.setAdapter(mAdapter);
@@ -167,6 +168,17 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
             new LoadMoreInBackground().execute(mAdapter.getNextURL());
         } else {
             Toast.makeText(getContext(), "End of list", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        Object tag = view.getTag();
+
+        if (tag != null && tag instanceof User) {
+            User user = (User) tag;
+            Home homeActivity = (Home) getActivity();
+            homeActivity.loadUserProfile(user);
         }
     }
 

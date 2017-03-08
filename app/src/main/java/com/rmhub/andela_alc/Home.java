@@ -37,10 +37,16 @@ public class Home extends AppCompatActivity {
         ft.add(R.id.container, mFragment);
         ft.commit();
     }
-    public void loadUserProfile(User user){
+
+    public void loadUserProfile(User user) {
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment mFragment = UserProfileFragment.newInstance();
+        ft.setCustomAnimations(R.anim.fragment_slide_left_enter,
+                R.anim.fragment_slide_left_exit,
+                R.anim.fragment_slide_right_enter,
+                R.anim.fragment_slide_right_exit);
+        Fragment mFragment = UserProfileFragment.newInstance(user);
         ft.replace(R.id.container, mFragment);
+        ft.addToBackStack(null);
         ft.commit();
     }
 
