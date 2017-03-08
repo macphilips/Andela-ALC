@@ -23,11 +23,13 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> implements ImageWorker.OnImageLoadedListener {
 
     private static final int VIEW_TYPE_LOADING = 1;
+    View.OnClickListener itemClickListener, loadClickListener;
     private ImageFetcher mImageFetcher;
     private List<User> userList;
     private int VIEW_TYPE_ITEM = 2;
     private String nextURL;
     private String lastURL;
+    private int totalCount, currentCount;
 
     public UserAdapter(List<User> userList, ImageFetcher mImageFetcher) {
         this.mImageFetcher = mImageFetcher;
@@ -46,20 +48,38 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         this(userList, null);
     }
 
-    public String getLastURL() {
+    public void setItemClickListener(View.OnClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public void setLoadClickListener(View.OnClickListener loadClickListener) {
+        this.loadClickListener = loadClickListener;
+    }
+
+    private String getLastURL() {
         return lastURL;
     }
 
-    public void setLastURL(String lastURL) {
+    private void setLastURL(String lastURL) {
         this.lastURL = lastURL;
     }
 
-    public List<User> getUserList() {
+    private List<User> getUserList() {
         return userList;
     }
 
     public void setUserList(List<User> userList) {
-        this.userList = userList;
+        this.userList = (userList);
+        notifyDataSetChanged();
+    }
+
+    public void addUserList(List<User> userList) {
+        int end = this.userList.size();
+        for (int i = 0, n = userList.size(); i < n; i++) {
+            userList.get(i).setId(i + end);
+        }
+        this.userList.addAll(userList);
+        currentCount = userList.size();
         notifyDataSetChanged();
     }
 
@@ -67,14 +87,42 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         this.mImageFetcher = mImageFetcher;
     }
 
+    public String getNextURL() {
+        return nextURL;
+    }
+
+    private void setNextURL(String nextURL) {
+        this.nextURL = nextURL;
+    }
+
+    public void searchResult(UserSearchResult result) {
+        addUserList(result.getUsers());
+        this.setLastURL(result.getHeader().getLast());
+        this.setNextURL(result.getHeader().getNext());
+        totalCount = result.getTotalCount();
+
+    }
+
+    public boolean hasMoreItemToLoad() {
+        return currentCount < totalCount;
+    }
+
+    public void removeLastItem() {
+        getUserList().remove(getItemCount() - 1);
+        notifyItemInserted(getItemCount());
+    }
+
+    public void addLastItem(User user) {
+        getUserList().add(user);
+        notifyItemInserted(getItemCount() - 1);
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
-            return new MyItemHolder(itemView);
+            return new MyItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false));
         } else if (viewType == VIEW_TYPE_LOADING) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false);
-            return new MyProgressHolder(itemView);
+            return new MyProgressHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_item, parent, false));
         }
         return null;
     }
@@ -85,19 +133,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
             MyItemHolder itemHolder = (MyItemHolder) holder;
             User user = userList.get(position);
             itemHolder.username.setText(String.format("@%s", user.getUsername()));
-            itemHolder.name.setText((user.getName() != null) ? user.getName() : "");
+            itemHolder.name.setText(user.getId());
+            // itemHolder.name.setText((user.getName() != null) ? user.getName() : "");
             if (mImageFetcher != null) {
                 mImageFetcher.loadImage(user.getAvatarURL(), itemHolder.avatar);
             }
+            holder.container.setTag(user);
+            if (itemClickListener != null)
+                itemHolder.container.setOnClickListener(itemClickListener);
         } else if (holder instanceof MyProgressHolder) {
             MyProgressHolder itemHolder = (MyProgressHolder) holder;
 
         }
     }
 
-    @Override
     public int getItemCount() {
-        return (userList == null) ? 0 : userList.size();
+        return userList.size();
     }
 
     @Override
@@ -112,23 +163,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         }
     }
 
-    public String getNextURL() {
-        return nextURL;
-    }
-
-    public void setNextURL(String nextURL) {
-        this.nextURL = nextURL;
-    }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        View container;
+
         public MyViewHolder(View itemView) {
             super(itemView);
+            container = itemView;
         }
     }
 
     private class MyItemHolder extends MyViewHolder {
         TextView username, name;
         ImageView avatar;
+
 
         MyItemHolder(View view) {
             super(view);

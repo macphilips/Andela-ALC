@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.rmhub.andela_alc.util.AsyncTask;
 import com.rmhub.andela_alc.util.ImageCache;
@@ -162,10 +163,10 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
 
     @Override
     public void loadMore() {
-        mAdapter.getUserList().add(null);
-        mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
-        if (!mAdapter.getNextURL().equalsIgnoreCase(mAdapter.getLastURL())) {
+        if (mAdapter.hasMoreItemToLoad()) {
             new LoadMoreInBackground().execute(mAdapter.getNextURL());
+        } else {
+            Toast.makeText(getContext(), "End of list", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -181,9 +182,7 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
             super.onPostExecute(callback);
             getActivity().dismissDialog(0);
             if (callback instanceof UserSearchResult) {
-                mAdapter.getUserList().addAll(((UserSearchResult) callback).getUsers());
-                mAdapter.setNextURL(((UserSearchResult) callback).getHeader().getNext());
-                mAdapter.setLastURL(((UserSearchResult) callback).getHeader().getLast());
+                mAdapter.searchResult((UserSearchResult) callback);
             }
         }
 
@@ -196,22 +195,21 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
     }
 
     private class LoadMoreInBackground extends AsyncTask<String, Void, SearchResultCallback> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mAdapter.getUserList().remove(mAdapter.getItemCount() - 1);
-            mAdapter.notifyItemInserted(mAdapter.getItemCount());
-        }
 
         @Override
         protected void onPostExecute(SearchResultCallback callback) {
             super.onPostExecute(callback);
             if (callback instanceof UserSearchResult) {
-                mAdapter.getUserList().addAll(((UserSearchResult) callback).getUsers());
-                mAdapter.setNextURL(((UserSearchResult) callback).getHeader().getNext());
-                mAdapter.notifyDataSetChanged();
+                mAdapter.removeLastItem();
+                mAdapter.searchResult((UserSearchResult) callback);
                 scrollChange.setLoading();
             }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mAdapter.addLastItem(null);
         }
 
         @Override

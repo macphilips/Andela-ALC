@@ -26,8 +26,11 @@ public class User implements Parcelable {
             organizationsURL, reposURL, receivedEventsURL, type, score, name, company, location,
             email, bio, blog, gistsURL, followingURL;
     private boolean hireable;
-    private int numOfFollowers, publicRepos, numOfFollowing, publicGists;
-
+    private int numOfFollowers;
+    private int publicRepos;
+    private int numOfFollowing;
+    private int publicGists;
+    private int id;
 
     public User() {
 
@@ -59,6 +62,15 @@ public class User implements Parcelable {
         publicRepos = in.readInt();
         numOfFollowing = in.readInt();
         publicGists = in.readInt();
+        id = in.readInt();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
@@ -88,6 +100,7 @@ public class User implements Parcelable {
         dest.writeInt(publicRepos);
         dest.writeInt(numOfFollowing);
         dest.writeInt(publicGists);
+        dest.writeInt(id);
     }
 
     @Override

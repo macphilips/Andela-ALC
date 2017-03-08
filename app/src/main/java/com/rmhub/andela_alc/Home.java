@@ -32,12 +32,16 @@ public class Home extends AppCompatActivity {
     }
 
     private void setupFeed() {
-
         final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment mFragment = UserResultFragment.newInstance();
         ft.add(R.id.container, mFragment);
         ft.commit();
-
+    }
+    public void loadUserProfile(User user){
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment mFragment = UserProfileFragment.newInstance();
+        ft.replace(R.id.container, mFragment);
+        ft.commit();
     }
 
     @SuppressWarnings("deprecation")
