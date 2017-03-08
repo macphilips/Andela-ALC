@@ -113,6 +113,8 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         if (!success) {
             ErrorDialog
                     .show(getContext().getResources().getString(R.string.permission_request), getActivity().getSupportFragmentManager());
+        } else {
+            startSearch();
         }
 
     }
@@ -165,6 +167,7 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
     @Override
     public void loadMore() {
         if (mAdapter.hasMoreItemToLoad()) {
+            mAdapter.addLastItem(null);
             new LoadMoreInBackground().execute(mAdapter.getNextURL());
         } else {
             Toast.makeText(getContext(), "End of list", Toast.LENGTH_SHORT).show();
@@ -221,13 +224,17 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mAdapter.addLastItem(null);
         }
 
         @Override
         protected SearchResultCallback doInBackground(String... params) {
             UserSearchResult result = new UserSearchResult();
             ConnectionUtil.search(params[0], result);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return result;
         }
     }

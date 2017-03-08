@@ -23,29 +23,17 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> implements ImageWorker.OnImageLoadedListener {
 
     private static final int VIEW_TYPE_LOADING = 1;
-    View.OnClickListener itemClickListener;
+    private View.OnClickListener itemClickListener;
     private ImageFetcher mImageFetcher;
-    private List<User> userList;
+    private List<User> userList = new ArrayList<>();
     private int VIEW_TYPE_ITEM = 2;
     private String nextURL;
     private String lastURL;
     private int totalCount, currentCount;
 
-    public UserAdapter(List<User> userList, ImageFetcher mImageFetcher) {
-        this.mImageFetcher = mImageFetcher;
-        this.userList = userList;
-    }
-
-    public UserAdapter() {
-        this(new ArrayList<User>(), null);
-    }
 
     public UserAdapter(ImageFetcher mImageFetcher) {
-        this(new ArrayList<User>(), mImageFetcher);
-    }
-
-    public UserAdapter(List<User> userList) {
-        this(userList, null);
+        this.mImageFetcher = mImageFetcher;
     }
 
     public void setItemClickListener(View.OnClickListener itemClickListener) {
@@ -129,7 +117,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
             MyItemHolder itemHolder = (MyItemHolder) holder;
             User user = userList.get(position);
             itemHolder.username.setText(String.format("@%s", user.getUsername()));
-            itemHolder.name.setText(user.getId());
+            itemHolder.name.setText(String.format("id %d",user.getId()));
             // itemHolder.name.setText((user.getName() != null) ? user.getName() : "");
             if (mImageFetcher != null) {
                 mImageFetcher.loadImage(user.getAvatarURL(), itemHolder.avatar);
@@ -171,12 +159,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     private class MyItemHolder extends MyViewHolder {
         TextView username, name;
         ImageView avatar;
-
-
         MyItemHolder(View view) {
             super(view);
             username = (TextView) view.findViewById(R.id.username);
-            name = (TextView) view.findViewById(R.id.name);
+            name = (TextView) view.findViewById(R.id.user_fullname);
             avatar = (ImageView) view.findViewById(R.id.user_avatar);
         }
     }
