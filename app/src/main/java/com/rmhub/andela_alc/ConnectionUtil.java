@@ -1,5 +1,6 @@
 package com.rmhub.andela_alc;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -21,16 +22,20 @@ public class ConnectionUtil {
     public static final String ACCESS_TOKEN = "176e63e80634a10cf8e05ee4dd17e91c0231ecb5";
 
 
-    public static String search(SearchQuery query, SearchResultCallback callback) {
-        java.net.URL url;
+    public static void search(SearchQuery query, SearchResultCallback callback) {
+        String params = "q=" + query.getSearchQuery()
+                //+ "&access_token=" + ACCESS_TOKEN
+                + "&per_page=20";
+        search(String.format("%s?%s", query.getURL(), params), callback);
+
+    }
+
+    @Nullable
+    public static void search(String url_string, SearchResultCallback callback) {
+        URL url;
         String result = "";
         BufferedReader in;
         try {
-            String params = "q=" + query.getSearchQuery()
-                    //+ "&access_token=" + ACCESS_TOKEN
-                    + "per_page=20";
-            String url_string = String.format("%s?%s", query.getURL(), params);
-
             Log.d("sending post request", "url=" + url_string);
             url = new URL(url_string);
             HttpURLConnection conn;
@@ -52,18 +57,14 @@ public class ConnectionUtil {
             callback.getHeader().remaining(Integer.parseInt(remain));
             callback.getHeader().link(link);
             Log.d("", String.valueOf(code));
-
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
             result = null;
         } catch (NumberFormatException ignored) {
-
         }
 
         Log.d("sendPostHttpRequest", String.valueOf(result));
-        return result;
-
     }
 
 }

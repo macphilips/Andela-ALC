@@ -70,18 +70,21 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
 
     private void init(View v) {
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.users_list);
+        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         ImageFetcher mPostFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
+
         mPostFetcher.setLoadingImage(R.drawable.post_background);
         mPostFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
-        mAdapter = new UserAdapter(getActivity(), mPostFetcher);
 
-
-        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+
+        mAdapter = new UserAdapter(mPostFetcher);
         scrollChange = new ScrollChange(mLayoutManager, this);
+
+        recyclerView.setAdapter(mAdapter);
         recyclerView.addOnScrollListener(scrollChange);
+
         startSearch();
     }
 
@@ -159,7 +162,11 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
 
     @Override
     public void loadMore() {
-
+        mAdapter.getUserList().add(null);
+        mAdapter.notifyItemInserted(mAdapter.getItemCount() - 1);
+        if (!mAdapter.getNextURL().equalsIgnoreCase(mAdapter.getLastURL())) {
+            new LoadMoreInBackground().execute(mAdapter.getNextURL());
+        }
     }
 
     private class SearchInBackground extends AsyncTask<SearchQuery, Void, SearchResultCallback> {
@@ -174,13 +181,41 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback {
             super.onPostExecute(callback);
             getActivity().dismissDialog(0);
             if (callback instanceof UserSearchResult) {
-                mAdapter.setUserList(((UserSearchResult) callback).getUsers());
-
+                mAdapter.getUserList().addAll(((UserSearchResult) callback).getUsers());
+                mAdapter.setNextURL(((UserSearchResult) callback).getHeader().getNext());
+                mAdapter.setLastURL(((UserSearchResult) callback).getHeader().getLast());
             }
         }
 
         @Override
         protected SearchResultCallback doInBackground(SearchQuery... params) {
+            UserSearchResult result = new UserSearchResult();
+            ConnectionUtil.search(params[0], result);
+            return result;
+        }
+    }
+
+    private class LoadMoreInBackground extends AsyncTask<String, Void, SearchResultCallback> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mAdapter.getUserList().remove(mAdapter.getItemCount() - 1);
+            mAdapter.notifyItemInserted(mAdapter.getItemCount());
+        }
+
+        @Override
+        protected void onPostExecute(SearchResultCallback callback) {
+            super.onPostExecute(callback);
+            if (callback instanceof UserSearchResult) {
+                mAdapter.getUserList().addAll(((UserSearchResult) callback).getUsers());
+                mAdapter.setNextURL(((UserSearchResult) callback).getHeader().getNext());
+                mAdapter.notifyDataSetChanged();
+                scrollChange.setLoading();
+            }
+        }
+
+        @Override
+        protected SearchResultCallback doInBackground(String... params) {
             UserSearchResult result = new UserSearchResult();
             ConnectionUtil.search(params[0], result);
             return result;

@@ -1,6 +1,5 @@
 package com.rmhub.andela_alc;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,36 +23,48 @@ import java.util.List;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> implements ImageWorker.OnImageLoadedListener {
 
     private static final int VIEW_TYPE_LOADING = 1;
-    private final Context mContext;
     private ImageFetcher mImageFetcher;
     private List<User> userList;
     private int VIEW_TYPE_ITEM = 2;
+    private String nextURL;
+    private String lastURL;
 
-    public UserAdapter(Context mContext, List<User> userList, ImageFetcher mImageFetcher) {
-        this.mContext = mContext;
+    public UserAdapter(List<User> userList, ImageFetcher mImageFetcher) {
         this.mImageFetcher = mImageFetcher;
         this.userList = userList;
     }
 
-    public UserAdapter(Context mContext) {
-        this(mContext, new ArrayList<User>(), null);
+    public UserAdapter() {
+        this(new ArrayList<User>(), null);
     }
 
-    public UserAdapter(Context mContext, ImageFetcher mImageFetcher) {
-        this(mContext, new ArrayList<User>(), mImageFetcher);
+    public UserAdapter(ImageFetcher mImageFetcher) {
+        this(new ArrayList<User>(), mImageFetcher);
     }
 
-    public UserAdapter(Context mContext, List<User> userList) {
-        this(mContext, userList, null);
+    public UserAdapter(List<User> userList) {
+        this(userList, null);
     }
 
-    public void setPostFetcher(ImageFetcher mImageFetcher) {
-        this.mImageFetcher = mImageFetcher;
+    public String getLastURL() {
+        return lastURL;
+    }
+
+    public void setLastURL(String lastURL) {
+        this.lastURL = lastURL;
+    }
+
+    public List<User> getUserList() {
+        return userList;
     }
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
         notifyDataSetChanged();
+    }
+
+    public void setPostFetcher(ImageFetcher mImageFetcher) {
+        this.mImageFetcher = mImageFetcher;
     }
 
     @Override
@@ -86,7 +97,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return (userList == null) ? 0 : userList.size();
     }
 
     @Override
@@ -101,17 +112,25 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         }
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public String getNextURL() {
+        return nextURL;
+    }
+
+    public void setNextURL(String nextURL) {
+        this.nextURL = nextURL;
+    }
+
+    class MyViewHolder extends RecyclerView.ViewHolder {
         public MyViewHolder(View itemView) {
             super(itemView);
         }
     }
 
-    public class MyItemHolder extends MyViewHolder {
-        public TextView username, name;
-        public ImageView avatar;
+    private class MyItemHolder extends MyViewHolder {
+        TextView username, name;
+        ImageView avatar;
 
-        public MyItemHolder(View view) {
+        MyItemHolder(View view) {
             super(view);
             username = (TextView) view.findViewById(R.id.username);
             name = (TextView) view.findViewById(R.id.name);
@@ -119,15 +138,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         }
     }
 
-    public class MyProgressHolder extends MyViewHolder {
-        public TextView username, name;
-        public ImageView avatar;
+    private class MyProgressHolder extends MyViewHolder {
+        View progressContainer, loadMoreContain;
 
-        public MyProgressHolder(View view) {
+        MyProgressHolder(View view) {
             super(view);
-            username = (TextView) view.findViewById(R.id.username);
-            name = (TextView) view.findViewById(R.id.name);
-            avatar = (ImageView) view.findViewById(R.id.user_avatar);
+            progressContainer = view.findViewById(R.id.progress_container);
+            loadMoreContain = view.findViewById(R.id.load_container);
         }
     }
 }
