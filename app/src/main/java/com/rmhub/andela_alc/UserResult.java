@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
  * .
  */
 
-public class UserSearchResult implements SearchResultCallback {
+public class UserResult implements ResultCallback {
 
     private int totalCount;
     private boolean resultIncomplete;
@@ -21,7 +21,7 @@ public class UserSearchResult implements SearchResultCallback {
 
     @Override
     public String toString() {
-        return "UserSearchResult{" +
+        return "UserResult{" +
                 "totalCount=" + totalCount +
                 ", resultIncomplete=" + resultIncomplete +
                 ", users=" + users +
@@ -91,8 +91,8 @@ public class UserSearchResult implements SearchResultCallback {
         public void link(String link) {
             this.link = link;
             parseLink();
-            Log.d("UserSearchResult", "next=" + next);
-            Log.d("UserSearchResult", " last=" + last);
+            Log.d("UserResult", "next=" + next);
+            Log.d("UserResult", " last=" + last);
         }
 
         private void parseLink() {

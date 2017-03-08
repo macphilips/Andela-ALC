@@ -1,6 +1,7 @@
 package com.rmhub.andela_alc;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -22,7 +23,7 @@ public class ConnectionUtil {
     public static final String ACCESS_TOKEN = "176e63e80634a10cf8e05ee4dd17e91c0231ecb5";
 
 
-    public static void search(SearchQuery query, SearchResultCallback callback) {
+    public static void search(SearchQuery query, ResultCallback callback) {
         String params = "q=" + query.getSearchQuery()
                 //+ "&access_token=" + ACCESS_TOKEN
                 + "&per_page=20";
@@ -31,7 +32,7 @@ public class ConnectionUtil {
     }
 
     @Nullable
-    public static void search(String url_string, SearchResultCallback callback) {
+    public static void search(String url_string, ResultCallback callback) {
         URL url;
         String result = "";
         BufferedReader in;
@@ -53,9 +54,15 @@ public class ConnectionUtil {
                 result = result.concat(inputLine);
             }
             callback.searchResult(result);
-            callback.getHeader().limit(Integer.parseInt(limit));
-            callback.getHeader().remaining(Integer.parseInt(remain));
-            callback.getHeader().link(link);
+            if (limit != null && !TextUtils.isEmpty(limit))
+                callback.getHeader().limit(Integer.parseInt(limit));
+
+            if (remain != null && !TextUtils.isEmpty(remain))
+                callback.getHeader().remaining(Integer.parseInt(remain));
+
+            if (link != null && !TextUtils.isEmpty(link))
+                callback.getHeader().link(link);
+
             Log.d("", String.valueOf(code));
             in.close();
         } catch (IOException e) {
@@ -65,6 +72,10 @@ public class ConnectionUtil {
         }
 
         Log.d("sendPostHttpRequest", String.valueOf(result));
+    }
+
+    public static void loadFullUserProfile(User user) {
+
     }
 
 }

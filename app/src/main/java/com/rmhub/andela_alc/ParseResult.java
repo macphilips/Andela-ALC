@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 class ParseResult {
 
-    public static void searchResult(String result, UserSearchResult userSearchResult) {
+    public static void searchResult(String result, UserResult userSearchResult) {
         try {
             JSONObject resultObj = new JSONObject(result);
             if (resultObj.has("total_count")) {

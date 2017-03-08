@@ -22,8 +22,6 @@ import com.rmhub.andela_alc.util.AsyncTask;
 import com.rmhub.andela_alc.util.ImageCache;
 import com.rmhub.andela_alc.util.ImageFetcher;
 
-import java.util.ArrayList;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -37,7 +35,6 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
     private static final String FRAGMENT_DIALOG = "Confirmation Dialog";
     ImageCache.ImageCacheParams cacheParams = null;
     int mImageThumbSize;
-    private ArrayList<User> cardList;
     private UserAdapter mAdapter;
     private ScrollChange scrollChange;
 
@@ -72,15 +69,15 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
     private void init(View v) {
         RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.users_list);
         final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        ImageFetcher mPostFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
 
-        mPostFetcher.setLoadingImage(R.drawable.post_background);
-        mPostFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
+        ImageFetcher imageFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
+        imageFetcher.setLoadingImage(R.drawable.post_background);
+        imageFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
 
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new UserAdapter(mPostFetcher);
+        mAdapter = new UserAdapter(imageFetcher);
         mAdapter.setItemClickListener(this);
         scrollChange = new ScrollChange(mLayoutManager, this);
 
@@ -185,7 +182,7 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         }
     }
 
-    private class SearchInBackground extends AsyncTask<SearchQuery, Void, SearchResultCallback> {
+    private class SearchInBackground extends AsyncTask<SearchQuery, Void, ResultCallback> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -193,30 +190,30 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         }
 
         @Override
-        protected void onPostExecute(SearchResultCallback callback) {
+        protected void onPostExecute(ResultCallback callback) {
             super.onPostExecute(callback);
             getActivity().dismissDialog(0);
-            if (callback instanceof UserSearchResult) {
-                mAdapter.searchResult((UserSearchResult) callback);
+            if (callback instanceof UserResult) {
+                mAdapter.searchResult((UserResult) callback);
             }
         }
 
         @Override
-        protected SearchResultCallback doInBackground(SearchQuery... params) {
-            UserSearchResult result = new UserSearchResult();
+        protected ResultCallback doInBackground(SearchQuery... params) {
+            UserResult result = new UserResult();
             ConnectionUtil.search(params[0], result);
             return result;
         }
     }
 
-    private class LoadMoreInBackground extends AsyncTask<String, Void, SearchResultCallback> {
+    private class LoadMoreInBackground extends AsyncTask<String, Void, ResultCallback> {
 
         @Override
-        protected void onPostExecute(SearchResultCallback callback) {
+        protected void onPostExecute(ResultCallback callback) {
             super.onPostExecute(callback);
-            if (callback instanceof UserSearchResult) {
+            if (callback instanceof UserResult) {
                 mAdapter.removeLastItem();
-                mAdapter.searchResult((UserSearchResult) callback);
+                mAdapter.searchResult((UserResult) callback);
                 scrollChange.setLoading();
             }
         }
@@ -227,8 +224,8 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         }
 
         @Override
-        protected SearchResultCallback doInBackground(String... params) {
-            UserSearchResult result = new UserSearchResult();
+        protected ResultCallback doInBackground(String... params) {
+            UserResult result = new UserResult();
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

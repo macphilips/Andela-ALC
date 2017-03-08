@@ -82,7 +82,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         this.nextURL = nextURL;
     }
 
-    public void searchResult(UserSearchResult result) {
+    public void searchResult(UserResult result) {
         addUserList(result.getUsers());
         this.setLastURL(result.getHeader().getLast());
         this.setNextURL(result.getHeader().getNext());
