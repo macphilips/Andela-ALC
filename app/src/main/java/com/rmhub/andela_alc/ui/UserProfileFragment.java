@@ -65,7 +65,7 @@ public class UserProfileFragment extends Fragment {
         username.setText(String.format("@%s", user.getUsername()));
         TextView url = (TextView) view.findViewById(R.id.user_url);
         url.setText(String.format("%s", user.getHtmlURL()));
-        View share = view.findViewById(R.id.share_buton);
+        View share = view.findViewById(R.id.share_button);
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -12,12 +14,14 @@
             android:id="@+id/user_avatar"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:padding="10dp"
+            android:padding="5dp"
             android:src="@drawable/post_background" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical">
 
             <TextView
@@ -25,7 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="\@Username" />
+                android:text="\@Username"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/user_url"
@@ -42,12 +47,12 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/share_buton"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_menu_share" />
-</LinearLayout>
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_action_share" />
+
+</android.support.design.widget.CoordinatorLayout>
