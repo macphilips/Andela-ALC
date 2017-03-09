@@ -1,8 +1,10 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.helper;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import com.rmhub.andela_alc.callback.LoadMoreCallback;
 
 /**
  * Created by MOROLANI on 3/7/2017
@@ -11,7 +13,7 @@ import android.support.v7.widget.RecyclerView;
  * .
  */
 
-class ScrollChange extends RecyclerView.OnScrollListener {
+public class ScrollChange extends RecyclerView.OnScrollListener {
 
     private final RecyclerView.LayoutManager manager;
     private final LoadMoreCallback callback;

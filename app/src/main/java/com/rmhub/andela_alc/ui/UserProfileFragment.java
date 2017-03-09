@@ -1,19 +1,18 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
+import com.rmhub.andela_alc.R;
+import com.rmhub.andela_alc.helper.User;
 import com.rmhub.andela_alc.util.ImageCache;
 import com.rmhub.andela_alc.util.ImageFetcher;
 
@@ -52,8 +51,10 @@ public class UserProfileFragment extends Fragment {
         imageFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
         imageFetcher.setLoadingImage(R.drawable.post_background);
         imageFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
-        setHasOptionsMenu(true);
+
     }
+
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -64,33 +65,18 @@ public class UserProfileFragment extends Fragment {
         username.setText(String.format("@%s", user.getUsername()));
         TextView url = (TextView) view.findViewById(R.id.user_url);
         url.setText(String.format("%s", user.getHtmlURL()));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_share) {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            String msg = String.format("Check out this awesome developer @%s, %s.", user.getUsername(), user.getHtmlURL());
-            sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
-            sendIntent.setType("text/plain");
-            setShareIntent(sendIntent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_user_profile, menu);
-        MenuItem item = menu.findItem(R.id.action_share);
-        mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-    }
-
-    private void setShareIntent(Intent shareIntent) {
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(shareIntent);
-        }
+        View share = view.findViewById(R.id.share_buton);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                String msg = String.format("Check out this awesome developer @%s, %s.", user.getUsername(), user.getHtmlURL());
+                sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+            }
+        });
     }
 
     @Nullable

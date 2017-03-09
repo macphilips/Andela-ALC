@@ -1,4 +1,4 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.helper;
 
 import android.os.Parcel;
 import android.os.Parcelable;

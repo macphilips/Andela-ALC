@@ -5,4 +5,9 @@
     <string name="permission_request">Request Permission</string>
     <string name="title_activity_home">Home</string>
     <string name="action_share">share</string>
+    <string name="title_activity_test">Test</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="send_to">Share with...</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.helper;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * .
  */
 
-class ParseResult {
+public class ParseResult {
 
     public static void searchResult(String result, UserResult userSearchResult) {
         try {

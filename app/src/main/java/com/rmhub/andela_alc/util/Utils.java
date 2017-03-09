@@ -26,7 +26,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.rmhub.andela_alc.Home;
+import com.rmhub.andela_alc.ui.Home;
 import com.rmhub.andela_alc.R;
 
 

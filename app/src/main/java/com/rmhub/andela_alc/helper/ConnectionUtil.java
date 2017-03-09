@@ -1,8 +1,11 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.helper;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.rmhub.andela_alc.callback.ResultCallback;
+import com.rmhub.andela_alc.interfaces.SearchQuery;
 
 import java.io.BufferedReader;
 import java.io.IOException;

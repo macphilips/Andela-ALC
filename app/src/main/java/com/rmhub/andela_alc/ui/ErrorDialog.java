@@ -1,4 +1,4 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;

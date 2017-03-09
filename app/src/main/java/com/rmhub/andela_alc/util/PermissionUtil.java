@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
-import com.rmhub.andela_alc.ConfirmationDialog;
+import com.rmhub.andela_alc.ui.ConfirmationDialog;
 
 /**
  * Created by MOROLANI on 3/7/2017

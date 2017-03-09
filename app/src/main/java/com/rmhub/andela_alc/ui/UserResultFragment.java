@@ -1,4 +1,4 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -18,6 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.rmhub.andela_alc.R;
+import com.rmhub.andela_alc.callback.LoadMoreCallback;
+import com.rmhub.andela_alc.callback.ResultCallback;
+import com.rmhub.andela_alc.helper.ConnectionUtil;
+import com.rmhub.andela_alc.helper.ScrollChange;
+import com.rmhub.andela_alc.helper.User;
+import com.rmhub.andela_alc.helper.UserResult;
+import com.rmhub.andela_alc.helper.UserSearchQuery;
+import com.rmhub.andela_alc.interfaces.SearchQuery;
 import com.rmhub.andela_alc.util.AsyncTask;
 import com.rmhub.andela_alc.util.ImageCache;
 import com.rmhub.andela_alc.util.ImageFetcher;

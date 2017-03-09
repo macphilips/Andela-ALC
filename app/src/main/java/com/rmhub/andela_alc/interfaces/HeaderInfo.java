@@ -1,4 +1,4 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.interfaces;
 
 /**
  * Created by MOROLANI on 3/6/2017
@@ -7,7 +7,7 @@ package com.rmhub.andela_alc;
  * .
  */
 
-interface HeaderInfo {
+public interface HeaderInfo {
     public void remaining(int remaining);
 
     public void limit(int limit);

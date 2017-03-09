@@ -1,6 +1,9 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.helper;
 
 import android.util.Log;
+
+import com.rmhub.andela_alc.callback.ResultCallback;
+import com.rmhub.andela_alc.interfaces.HeaderInfo;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;

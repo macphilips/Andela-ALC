@@ -1,4 +1,4 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.ui;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -11,7 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.rmhub.andela_alc.R;
+import com.rmhub.andela_alc.helper.User;
+
 public class Home extends AppCompatActivity {
+
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +25,8 @@ public class Home extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -28,7 +34,17 @@ public class Home extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        hideFab();
         setupFeed();
+
+    }
+
+    void showFab() {
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    void hideFab() {
+        fab.setVisibility(View.GONE);
     }
 
     private void setupFeed() {

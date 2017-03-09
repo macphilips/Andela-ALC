@@ -1,4 +1,4 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.rmhub.andela_alc.R;
+import com.rmhub.andela_alc.helper.User;
+import com.rmhub.andela_alc.helper.UserResult;
 import com.rmhub.andela_alc.util.ImageFetcher;
 import com.rmhub.andela_alc.util.ImageWorker;
 

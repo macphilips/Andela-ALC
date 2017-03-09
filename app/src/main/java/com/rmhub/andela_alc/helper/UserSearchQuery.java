@@ -1,4 +1,6 @@
-package com.rmhub.andela_alc;
+package com.rmhub.andela_alc.helper;
+
+import com.rmhub.andela_alc.interfaces.SearchQuery;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
