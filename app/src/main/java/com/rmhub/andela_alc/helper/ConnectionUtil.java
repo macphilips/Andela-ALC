@@ -78,7 +78,31 @@ public class ConnectionUtil {
     }
 
     public static void loadFullUserProfile(User user) {
+        URL url;
+        String result = "";
+        BufferedReader in;
+        try {
+            Log.d("sending post request", "url=" + user.getUrl());
+            url = new URL(user.getUrl());
+            HttpURLConnection conn;
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true);
+            conn.setRequestMethod("GET");
+            conn.connect();
+            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                result = result.concat(inputLine);
+            }
+            ParseResult.userResult(result, user);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            result = null;
+        } catch (NumberFormatException ignored) {
+        }
 
+        Log.d("sendPostHttpRequest", String.valueOf(result));
     }
 
 }

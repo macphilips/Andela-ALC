@@ -43,89 +43,103 @@ public class ParseResult {
         for (int i = 0, n = items.length(); i < n; i++) {
             JSONObject item = items.getJSONObject(i);
             User user = new User();
-            if (item.has("login")) {
-                user.setUsername(item.getString("login"));
-            }
-            if (item.has("avatar_url")) {
-                user.setAvatarURL(item.getString("avatar_url"));
-            }
-            if (item.has("gravatar")) {
-                user.setGravatarID(item.getString("gravatar"));
-            }
-            if (item.has("url")) {
-                user.setUrl(item.getString("url"));
-            }
-            if (item.has("html_url")) {
-                user.setHtmlURL(item.getString("html_url"));
-            }
-            if (item.has("followers_url")) {
-                user.setFollowersURL(item.getString("followers_url"));
-            }
-            if (item.has("following_url")) {
-                user.setFollowingURL(item.getString("following_url"));
-            }
-
-            if (item.has("gists_url")) {
-                user.setGistsURL(item.getString("gists_url"));
-            }
-            if (item.has("subscriptions_url")) {
-                user.setSubscriptionsURL(item.getString("subscriptions_url"));
-            }
-            if (item.has("organizations_url")) {
-                user.setOrganizationsURL(item.getString("organizations_url"));
-            }
-            if (item.has("repos_url")) {
-                user.setReposUrl(item.getString("repos_url"));
-            }
-            if (item.has("received_events_url")) {
-                user.setReceivedEventsURL(item.getString("received_events_url"));
-            }
-
-            if (item.has("type")) {
-                user.setType(item.getString("type"));
-            }
-            if (item.has("score")) {
-                user.setScore(item.getDouble("score"));
-            }
-
-            if (item.has("name")) {
-                user.setName(item.getString("name"));
-            }
-            if (item.has("company")) {
-                user.setCompany(item.getString("company"));
-            }
-
-            if (item.has("blog")) {
-                user.setBlog(item.getString("blog"));
-            }
-            if (item.has("location")) {
-                user.setLocation(item.getString("location"));
-            }
-            if (item.has("email")) {
-                user.setLocation(item.getString("email"));
-            }
-            if (item.has("hireable")) {
-                user.setHireable(item.getBoolean("hireable"));
-            }
-            if (item.has("bio")) {
-                user.setBio(item.getString("bio"));
-            }
-            if (item.has("public_repos")) {
-                user.setPublicRepos(item.getInt("public_repos"));
-            }
-            if (item.has("public_gists")) {
-                user.setPublicGists(item.getInt("public_gists"));
-            }
-            if (item.has("followers")) {
-                user.setNumOfFollowers(item.getInt("followers"));
-            }
-            if (item.has("following")) {
-                user.setNumOfFollowing(item.getInt("following"));
-            }
-
-            Log.d("ParseResult", String.valueOf(user));
+            getUser(item, user);
             users.add(user);
         }
         return users;
+    }
+
+    private static void getUser(JSONObject item, User user) throws JSONException {
+        if (item.has("login")) {
+            user.setUsername(item.getString("login"));
+        }
+        if (item.has("avatar_url")) {
+            user.setAvatarURL(item.getString("avatar_url"));
+        }
+        if (item.has("gravatar")) {
+            user.setGravatarID(item.getString("gravatar"));
+        }
+        if (item.has("url")) {
+            user.setUrl(item.getString("url"));
+        }
+        if (item.has("html_url")) {
+            user.setHtmlURL(item.getString("html_url"));
+        }
+        if (item.has("followers_url")) {
+            user.setFollowersURL(item.getString("followers_url"));
+        }
+        if (item.has("following_url")) {
+            user.setFollowingURL(item.getString("following_url"));
+        }
+
+        if (item.has("gists_url")) {
+            user.setGistsURL(item.getString("gists_url"));
+        }
+        if (item.has("subscriptions_url")) {
+            user.setSubscriptionsURL(item.getString("subscriptions_url"));
+        }
+        if (item.has("organizations_url")) {
+            user.setOrganizationsURL(item.getString("organizations_url"));
+        }
+        if (item.has("repos_url")) {
+            user.setReposUrl(item.getString("repos_url"));
+        }
+        if (item.has("received_events_url")) {
+            user.setReceivedEventsURL(item.getString("received_events_url"));
+        }
+
+        if (item.has("type")) {
+            user.setType(item.getString("type"));
+        }
+        if (item.has("score")) {
+            user.setScore(item.getDouble("score"));
+        }
+
+        if (item.has("name")) {
+            user.setName(item.getString("name"));
+        }
+        if (item.has("company")) {
+            user.setCompany(item.getString("company"));
+        }
+
+        if (item.has("blog")) {
+            user.setBlog(item.getString("blog"));
+        }
+        if (item.has("location")) {
+            user.setLocation(item.getString("location"));
+        }
+        if (item.has("email")) {
+            user.setLocation(item.getString("email"));
+        }
+        if (item.has("hireable")) {
+            user.setHireable(item.getBoolean("hireable"));
+        }
+        if (item.has("bio")) {
+            user.setBio(item.getString("bio"));
+        }
+        if (item.has("public_repos")) {
+            user.setPublicRepos(item.getInt("public_repos"));
+        }
+        if (item.has("public_gists")) {
+            user.setPublicGists(item.getInt("public_gists"));
+        }
+        if (item.has("followers")) {
+            user.setNumOfFollowers(item.getInt("followers"));
+        }
+        if (item.has("following")) {
+            user.setNumOfFollowing(item.getInt("following"));
+        }
+
+        Log.d("ParseResult", String.valueOf(user));
+    }
+
+    public static void userResult(String result, User user) {
+        JSONObject item = null;
+        try {
+            item = new JSONObject(result);
+            getUser(item, user);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
