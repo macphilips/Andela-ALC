@@ -38,7 +38,6 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> impleme
     UserAdapter(Activity activity, ImageFetcher mImageFetcher) {
         this.mActivity = activity;
         this.mImageFetcher = mImageFetcher;
-
     }
 
     List<User> getUserList() {
@@ -48,7 +47,7 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> impleme
     private void addUserList(List<User> userList) {
         int end = UserListController.users.size();
         for (int i = 0, n = userList.size(); i < n; i++) {
-            userList.get(i).setId(i + end);
+            userList.get(i).setId(i + end + 1);
         }
         UserListController.users.addAll(userList);
         currentCount = UserListController.users.size();
@@ -137,10 +136,6 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> impleme
             this.notifyItemChanged(pos);
         }
     }
-
-
-
-
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         View container;

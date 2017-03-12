@@ -1,6 +1,7 @@
 package com.rmhub.andela_alc.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -65,6 +66,14 @@ public class UserProfileFragment extends Fragment {
         username.setText(String.format("@%s", user.getUsername()));
         TextView url = (TextView) view.findViewById(R.id.user_url);
         url.setText(String.format("%s", user.getHtmlURL()));
+        url.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openInBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(user.getHtmlURL()));
+                //// startActivity(Intent.createChooser(openInBrowser, getResources().getText(R.string.open_with)));
+                startActivity(openInBrowser);
+            }
+        });
         View share = view.findViewById(R.id.share_button);
         share.setOnClickListener(new View.OnClickListener() {
             @Override

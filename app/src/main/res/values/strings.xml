@@ -10,4 +10,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="send_to">Share with...</string>
+    <string name="username">\@Username</string>
+    <string name="fullname">Fullname</string>
+    <string name="url">https://github.com/kkkttyyyyytttttkkkkkkk</string>
+    <string name="open_with">Open via</string>
 </resources>
