@@ -1,5 +1,6 @@
 package com.rmhub.andela_alc.ui;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +10,13 @@ import android.widget.TextView;
 
 import com.rmhub.andela_alc.R;
 import com.rmhub.andela_alc.helper.User;
+import com.rmhub.andela_alc.helper.UserListController;
 import com.rmhub.andela_alc.helper.UserResult;
 import com.rmhub.andela_alc.util.ImageFetcher;
 import com.rmhub.andela_alc.util.ImageWorker;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -23,61 +25,37 @@ import java.util.List;
  * owm
  * .
  */
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> implements ImageWorker.OnImageLoadedListener {
+class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> implements ImageWorker.OnImageLoadedListener {
 
     private static final int VIEW_TYPE_LOADING = 1;
-    private View.OnClickListener itemClickListener;
+    private final Activity mActivity;
     private ImageFetcher mImageFetcher;
-    private List<User> userList = new ArrayList<>();
     private int VIEW_TYPE_ITEM = 2;
     private String nextURL;
-    private String lastURL;
     private int totalCount, currentCount;
 
 
-    public UserAdapter(ImageFetcher mImageFetcher) {
+    UserAdapter(Activity activity, ImageFetcher mImageFetcher) {
+        this.mActivity = activity;
         this.mImageFetcher = mImageFetcher;
+
     }
 
-    public void setItemClickListener(View.OnClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
+    List<User> getUserList() {
+        return UserListController.users;
     }
 
-    private String getLastURL() {
-        return lastURL;
-    }
-
-    private void setLastURL(String lastURL) {
-        this.lastURL = lastURL;
-    }
-
-    private List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = (userList);
-        notifyDataSetChanged();
-    }
-
-    public void addUserList(List<User> userList) {
-        if (userList.size() == 0){
-
-        }
-            int end = this.userList.size();
+    private void addUserList(List<User> userList) {
+        int end = UserListController.users.size();
         for (int i = 0, n = userList.size(); i < n; i++) {
             userList.get(i).setId(i + end);
         }
-        this.userList.addAll(userList);
-        currentCount = userList.size();
+        UserListController.users.addAll(userList);
+        currentCount = UserListController.users.size();
         notifyDataSetChanged();
     }
 
-    public void setPostFetcher(ImageFetcher mImageFetcher) {
-        this.mImageFetcher = mImageFetcher;
-    }
-
-    public String getNextURL() {
+    String getNextURL() {
         return nextURL;
     }
 
@@ -85,24 +63,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         this.nextURL = nextURL;
     }
 
-    public void searchResult(UserResult result) {
+    void searchResult(UserResult result) {
         addUserList(result.getUsers());
-        this.setLastURL(result.getHeader().getLast());
         this.setNextURL(result.getHeader().getNext());
         totalCount = result.getTotalCount();
-
     }
 
-    public boolean hasMoreItemToLoad() {
+    boolean hasMoreItemToLoad() {
         return currentCount < totalCount;
     }
 
-    public void removeLastItem() {
+    void removeLastItem() {
         getUserList().remove(getItemCount() - 1);
         notifyItemInserted(getItemCount());
     }
 
-    public void addLastItem(User user) {
+    void addLastItem(User user) {
         getUserList().add(user);
         notifyItemInserted(getItemCount() - 1);
     }
@@ -121,28 +97,38 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         if (holder instanceof MyItemHolder) {
             MyItemHolder itemHolder = (MyItemHolder) holder;
-            User user = userList.get(position);
+            User user = UserListController.users.get(position);
             itemHolder.username.setText(String.format("@%s", user.getUsername()));
-            itemHolder.name.setText(String.format("id %d", user.getId()));
+            itemHolder.name.setText(String.format(Locale.US, "id %d", user.getId()));
             // itemHolder.name.setText((user.getName() != null) ? user.getName() : "");
             if (mImageFetcher != null) {
                 mImageFetcher.loadImage(user.getAvatarURL(), itemHolder.avatar);
             }
             holder.container.setTag(user);
-            if (itemClickListener != null)
-                itemHolder.container.setOnClickListener(itemClickListener);
-        } else if (holder instanceof MyProgressHolder) {
+            itemHolder.container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Object tag = view.getTag();
+                    if (tag != null && tag instanceof User && mActivity instanceof Home) {
+                        User user = (User) tag;
+                        Home homeActivity = (Home) mActivity;
+                        homeActivity.loadUserProfile(user);
+                    }
+                }
+            });
+        }/* else if (holder instanceof MyProgressHolder) {
             MyProgressHolder itemHolder = (MyProgressHolder) holder;
-        }
+        }*/
     }
 
     public int getItemCount() {
-        return userList.size();
+        return UserListController.users.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return userList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return UserListController.users.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     @Override
@@ -153,10 +139,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     }
 
 
+
+
+
     class MyViewHolder extends RecyclerView.ViewHolder {
         View container;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
             container = itemView;
         }

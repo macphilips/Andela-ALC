@@ -23,7 +23,6 @@ import com.rmhub.andela_alc.callback.LoadMoreCallback;
 import com.rmhub.andela_alc.callback.ResultCallback;
 import com.rmhub.andela_alc.helper.ConnectionUtil;
 import com.rmhub.andela_alc.helper.ScrollChange;
-import com.rmhub.andela_alc.helper.User;
 import com.rmhub.andela_alc.helper.UserResult;
 import com.rmhub.andela_alc.helper.UserSearchQuery;
 import com.rmhub.andela_alc.interfaces.SearchQuery;
@@ -34,7 +33,7 @@ import com.rmhub.andela_alc.util.ImageFetcher;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class UserResultFragment extends Fragment implements LoadMoreCallback, View.OnClickListener {
+public class UserResultFragment extends Fragment implements LoadMoreCallback {
 
     private static final String IMAGE_CACHE_DIR = "thumbs";
     private static final String[] PERMISSIONS = {Manifest.permission.INTERNET, Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -45,6 +44,7 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
     ImageCache.ImageCacheParams cacheParams = null;
     int mImageThumbSize;
     private UserAdapter mAdapter;
+    private int mCurPosition;
     private ScrollChange scrollChange;
 
     @SuppressLint("ValidFragment")
@@ -62,7 +62,9 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        init(view);
+        return view;
     }
 
     @Override
@@ -73,27 +75,29 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_size);
         cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
         // The welcome screen for this app (only one that automatically shows)
-    }
 
-    private void init(View v) {
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.users_list);
-        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
         ImageFetcher imageFetcher = new ImageFetcher(getActivity(), mImageThumbSize);
         imageFetcher.setLoadingImage(R.drawable.post_background);
         imageFetcher.addImageCache(getActivity().getSupportFragmentManager(), cacheParams);
+        mAdapter = new UserAdapter(getActivity(), imageFetcher);
 
+    }
+
+    private void init(View v) {
+        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.users_list);
+        RecyclerView.LayoutManager mLayoutManager;
+
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        scrollChange = new ScrollChange(mLayoutManager, this);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mAdapter = new UserAdapter(imageFetcher);
-        mAdapter.setItemClickListener(this);
-        scrollChange = new ScrollChange(mLayoutManager, this);
-
         recyclerView.setAdapter(mAdapter);
         recyclerView.addOnScrollListener(scrollChange);
 
-        startSearch();
+        if (mAdapter != null && mAdapter.getUserList().size() == 0) {
+            startSearch();
+        }
     }
 
     private void startSearch() {
@@ -150,12 +154,6 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
         return false;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init(view);
-    }
-
     public boolean requestPermission() {
         if (!hasPermissionsGranted(PERMISSIONS)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -177,17 +175,6 @@ public class UserResultFragment extends Fragment implements LoadMoreCallback, Vi
             new LoadMoreInBackground().execute(mAdapter.getNextURL());
         } else {
             Toast.makeText(getContext(), "End of list", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        Object tag = view.getTag();
-
-        if (tag != null && tag instanceof User) {
-            User user = (User) tag;
-            Home homeActivity = (Home) getActivity();
-            homeActivity.loadUserProfile(user);
         }
     }
 
